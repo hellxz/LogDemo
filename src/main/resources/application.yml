@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: LogDemo
+
+server:
+  port: 8000
+
+instance-id: ${random.value}
+

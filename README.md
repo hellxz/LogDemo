@@ -4,5 +4,7 @@
 项目中的用到的appender来源于
 <https://github.com/danielwegener/logback-kafka-appender>
 
+另外，本分支添加了获取SkyWalking的trace-id的整合方式，对应博客<https://www.cnblogs.com/hellxz/p/logback_skywalking_trace_id.html>
+
 本项目配合我的博客园随笔食用，风味更佳😁
 <https://www.cnblogs.com/hellxz>

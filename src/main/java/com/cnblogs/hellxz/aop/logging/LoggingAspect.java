@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 /**
  * 日志切面
  *
@@ -43,6 +41,8 @@ public class LoggingAspect {
         this.instanceId = instanceId;
     }
 
+
+
     /**
      * 定义切点，这里切在controller包下所有方法上
      */
@@ -57,14 +57,13 @@ public class LoggingAspect {
     @Around("loggingPointCut()")
     public Object around(ProceedingJoinPoint joinPoint){
         Object obj;
+
         try{
-            // 生成随机traceId，仅用于演示
-            UUID traceId = UUID.randomUUID();
             // 入参日志
-            logger.info("app_name:{}， server_port: {}， instance_id: {}，method_name：{} 被调用，in_args：{}，traceId: {}", appName, serverPort, instanceId, joinPoint.getSignature().getName(), joinPoint.getArgs(), traceId);
+            logger.info("app_name:{}， server_port: {}， instance_id: {}，method_name：{} 被调用，in_args：{}", appName, serverPort, instanceId, joinPoint.getSignature().getName(), joinPoint.getArgs());
             obj = joinPoint.proceed();
             // 出参日志
-            logger.info("app_name:{}， server_port: {}， instance_id: {}，method_name：{} 调用成功，out_args：{}，traceId: {}", appName, serverPort, instanceId, joinPoint.getSignature().getName(), obj, traceId);
+            logger.info("app_name:{}， server_port: {}， instance_id: {}，method_name：{} 调用成功，out_args：{}", appName, serverPort, instanceId, joinPoint.getSignature().getName(), obj);
         }catch (Throwable e){
             throw new RuntimeException(e);
         }

@@ -2,31 +2,35 @@
 <configuration>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level logger_name:%logger{36} - message:%msg%n</Pattern>
-        </layout>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level logger_name:%logger{36} - [%tid] - message:%msg%n</pattern>
+            </layout>
+        </encoder>
     </appender>
 
     <logger name="com.example.demo" level="INFO"/>
 
-     <!--此示例配置的限制性更强, 并将尝试确保每条消息最终以有序的方式交付(as long the logging application stays alive) -->
+    <!--此示例配置的限制性更强, 并将尝试确保每条消息最终以有序的方式交付(as long the logging application stays alive) -->
     <appender name="diy-kafka-appender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!-- 指定日志输出的格式 -->
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level logger_name:%logger{36} - message:%msg%n</pattern>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level logger_name:%logger{36} - [%tid] - message:%msg%n</pattern>
+            </layout>
         </encoder>
+
         <!-- 指定推送到的kafka topic -->
         <topic>all_logs</topic>
         <!-- ensure that every message sent by the executing host is partitioned to the same partition strategy -->
-        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.HostNameKeyingStrategy" />
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.HostNameKeyingStrategy"/>
         <!-- block the logging application thread if the kafka appender cannot keep up with sending the log messages -->
         <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.BlockingDeliveryStrategy">
-             <!--在确认kafka可用前无限等待 -->
+            <!--在确认kafka可用前无限等待 -->
             <timeout>0</timeout>
         </deliveryStrategy>
         <!-- 指定Kafka的地址 -->
-        <producerConfig>bootstrap.servers=kafka:9092</producerConfig>
-        <!--<producerConfig>bootstrap.servers=kafka1:9091,kafka2:9092,kafka3:9093</producerConfig>-->
+        <!--<producerConfig>bootstrap.servers=kafka:9092</producerConfig>-->
+        <producerConfig>bootstrap.servers=kafka1:9092,kafka2:9093,kafka3:9094</producerConfig>
         <!-- 限制缓冲区内存，默认32M -->
         <producerConfig>buffer.memory=8388608</producerConfig>
         <!-- 定义client.id -->
@@ -37,8 +41,8 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
         <!-- 添加刚才的appender的名称，这里与终端日志打印并存 -->
-        <appender-ref ref="diy-kafka-appender" />
+        <appender-ref ref="diy-kafka-appender"/>
     </root>
 </configuration>

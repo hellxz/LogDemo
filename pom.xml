@@ -53,6 +53,12 @@
             <version>0.2.0-RC2</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-logback-1.x</artifactId>
+            <version>6.2.0</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
